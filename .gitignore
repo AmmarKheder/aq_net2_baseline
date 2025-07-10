@@ -1,0 +1,28 @@
+# Environnements virtuels
+venv/
+env/
+ENV/
+
+# Fichiers Python temporaires
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs et outputs
+logs/
+outputs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Config perso
+*.env
