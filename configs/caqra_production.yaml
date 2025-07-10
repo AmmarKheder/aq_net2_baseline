@@ -1,0 +1,220 @@
+# Configuration ClimaX pour fine-tuning sur polluants CAQRA
+# Utilise le checkpoint pré-entraîné checkpoints/climax_1.40625deg.ckpt
+
+# Données
+data:
+  root_dir: "/scratch/project_462000640/ammar/data_rossice/"
+  train_years: [2013, 2014, 2015, 2016]
+  val_years: [2017]
+  test_years: [2018]
+  
+  # Variables d'entrée (météorologie) - compatibles checkpoint pré-entraîné
+  input_vars: ["u", "v", "temp", "rh", "psfc"]
+  
+  # Variables de sortie (polluants à prédire)
+  output_vars: ["pm25", "pm10", "so2", "no2", "co", "o3"]
+  
+  # Paramètres temporels
+  time_history: 6      # 6 heures d'historique
+  time_future: 12      # Prédire 12 heures à l'avance
+  
+  # Paramètres spatiaux - compatibles avec checkpoint pré-entraîné
+  spatial_subsample: 1  # Utiliser résolution complète
+  target_resolution: [128, 256]  # Résolution compatible ClimaX pré-entraîné
+  
+  # Normalisation
+  normalize: true
+  use_pretrained_vars: true
+
+# Architecture du modèle ClimaX - doit correspondre au checkpoint
+model:
+  name: "climax"
+  
+  # Paramètres du Vision Transformer (doivent correspondre au checkpoint)
+  img_size: [128, 256]    # Résolution du checkpoint pré-entraîné
+  patch_size: 4           # Taille des patches
+  in_chans: 5             # Nombre de variables d'entrée (u, v, temp, rh, psfc)
+  out_chans: 6            # Nombre de variables de sortie (6 polluants)
+  
+  # Architecture transformer (doit correspondre au checkpoint)
+  embed_dim: 1024         # Dimension d'embedding du checkpoint
+  depth: 24               # Nombre de couches transformer
+  num_heads: 16           # Attention heads
+  mlp_ratio: 4.0          # Ratio MLP
+  
+  # Paramètres temporels
+  time_history: 6         # Historique temporel
+  
+  # Dropout et régularisation
+  drop_rate: 0.1
+  attn_drop_rate: 0.1
+  drop_path_rate: 0.1
+  
+  # Activation et normalisation
+  act_layer: "gelu"
+  norm_layer: "layer_norm"
+  
+  # Paramètres spécifiques au fine-tuning
+  freeze_encoder: false   # Ne pas figer l'encodeur pour fine-tuning
+  use_time_diff: true     # Utiliser différences temporelles
+
+# Fine-tuning avec checkpoint pré-entraîné
+pretrained:
+  use_pretrained: true
+  checkpoint_path: "/scratch/project_462000640/ammar/rossice/checkpoints/climax_1.40625deg.ckpt"
+  
+  # Stratégie de fine-tuning
+  freeze_layers: []       # Laisser vide pour fine-tuner tout le modèle
+  # freeze_layers: ["encoder"]  # Décommenter pour figer l'encodeur
+  
+  # Adaptation des têtes de sortie
+  adapt_output_head: true  # Adapter la tête de sortie pour les polluants
+  
+  # Learning rate réduit pour fine-tuning
+  finetune_lr_ratio: 0.1  # LR = 0.1 * lr de base pour fine-tuning
+
+# Entraînement - paramètres adaptés pour fine-tuning
+training:
+  # Optimizer
+  optimizer: "adamw"
+  lr: 1e-4              # LR réduit pour fine-tuning
+  weight_decay: 1e-5
+  betas: [0.9, 0.95]
+  
+  # Scheduler
+  lr_scheduler: "cosine"
+  warmup_epochs: 5      # Warmup réduit pour fine-tuning
+  max_epochs: 50        # Moins d'époques pour fine-tuning
+  min_lr: 1e-6
+  
+  # Loss function adaptée aux polluants
+  loss_type: "mse"        # Mean Squared Error pour régression
+  loss_weights:           # Poids par polluant (ajustés selon importance)
+    pm25: 2.0             # PM2.5 plus important
+    pm10: 1.5             # PM10 important
+    so2: 1.0              # Poids standard
+    no2: 1.0              # Poids standard
+    co: 0.8               # CO moins critique
+    o3: 1.2               # O3 assez important
+  
+  # Gradient clipping
+  clip_grad_norm: 1.0
+  
+  # Early stopping
+  patience: 10          # Patience réduite pour fine-tuning
+  monitor: "val_loss"
+  mode: "min"
+
+# DataLoader - optimisé pour CAQRA
+dataloader:
+  batch_size: 2           # Batch size réduit pour fine-tuning et mémoire
+  num_workers: 8          # Parallélisme chargement données
+  pin_memory: true
+  persistent_workers: true
+
+# Validation et test spécifiques aux polluants
+evaluation:
+  # Métriques à calculer
+  metrics: ["rmse", "mae", "r2", "bias", "correlation"]
+  
+  # Évaluation par polluant
+  per_variable_metrics: true
+  
+  # Évaluation par région (zones urbaines vs rurales)
+  regional_evaluation: true
+  urban_threshold_pm25: 50.0  # Seuil PM2.5 pour définir zones urbaines
+  
+  # Évaluation des pics de pollution
+  extreme_events: true
+  percentile_threshold: 95    # Évaluer les événements > 95e percentile
+  
+  # Sauvegarde des prédictions
+  save_predictions: true
+  prediction_dir: "/scratch/project_462000640/ammar/rossice/outputs/predictions/"
+
+# Checkpoints et logging
+checkpoint:
+  save_dir: "/scratch/project_462000640/ammar/rossice/checkpoints/"
+  save_top_k: 3
+  monitor: "val_loss"
+  mode: "min"
+  filename: "climax_caqra_finetune_{epoch:02d}_{val_loss:.4f}"
+  
+logging:
+  project_name: "climax_caqra_pollution_finetune"
+  experiment_name: "finetune_6h_to_12h_v1"
+  log_dir: "/scratch/project_462000640/ammar/rossice/logs/"
+  log_every_n_steps: 20
+  
+  # Wandb (optionnel)
+  use_wandb: false
+  wandb_project: "climax_pollution_finetune"
+
+# Ressources et performance pour Lumi
+system:
+  # GPU configuration pour Lumi
+  devices: 8              # Utiliser les 8 GPUs de Lumi
+  accelerator: "gpu"
+  strategy: "ddp"         # Distributed Data Parallel
+  
+  # Precision pour économiser mémoire
+  precision: "16-mixed"   # Mixed precision
+  
+  # Optimisations mémoire
+  gradient_checkpointing: true
+  accumulate_grad_batches: 2  # Accumuler gradients pour batch effectif plus grand
+  
+  # Compilation (PyTorch 2.0+)
+  compile_model: false    # Désactiver si problèmes de compatibilité
+
+# Paths - structure rossice
+paths:
+  work_dir: "/scratch/project_462000640/ammar/rossice/"
+  data_dir: "/scratch/project_462000640/ammar/data_rossice/"
+  output_dir: "/scratch/project_462000640/ammar/rossice/outputs/"
+  checkpoint_dir: "/scratch/project_462000640/ammar/rossice/checkpoints/"
+
+# Reproductibilité
+seed: 42
+deterministic: true
+
+# Augmentation des données (optionnel pour polluants)
+augmentation:
+  spatial_flip: false     # Pas de flip pour données géospatiales
+  temporal_jitter: 0.05   # Léger bruit temporel
+  noise_std: 0.01        # Bruit gaussien très léger
+  
+  # Augmentation spécifique aux polluants
+  concentration_scaling: true  # Mise à l'échelle légère des concentrations
+  scaling_range: [0.95, 1.05]  # ±5% de variation
+
+# Validation croisée temporelle (optionnel)
+cross_validation:
+  enable: false
+  n_folds: 3
+  strategy: "temporal"    # Split temporel plutôt que spatial
+
+# Configuration spécifique aux polluants
+pollution_specific:
+  # Unités et conversions
+  units:
+    pm25: "μg/m³"
+    pm10: "μg/m³"
+    so2: "μg/m³"
+    no2: "μg/m³"
+    co: "mg/m³"
+    o3: "μg/m³"
+  
+  # Seuils de qualité de l'air (WHO guidelines)
+  who_thresholds:
+    pm25: 15.0    # WHO guideline μg/m³ (24h)
+    pm10: 45.0    # WHO guideline μg/m³ (24h)
+    so2: 40.0     # WHO guideline μg/m³ (24h)
+    no2: 25.0     # WHO guideline μg/m³ (annual)
+    o3: 100.0     # WHO guideline μg/m³ (8h)
+  
+  # Masques pour évaluation régionale
+  regional_masks:
+    beijing_region: [39.5, 40.5, 115.5, 117.5]  # lat_min, lat_max, lon_min, lon_max
+    shanghai_region: [30.5, 31.5, 120.5, 122.0]
+    guangzhou_region: [22.5, 23.5, 112.5, 114.0]

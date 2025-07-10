@@ -1,0 +1,47 @@
+# Configuration test rapide - version simplifiée de caqra_pollution_finetune.yaml
+data:
+  root_dir: "/scratch/project_462000640/ammar/data_rossice/"
+  train_years: [2013]          # Une seule année pour test
+  val_years: [2014]
+  test_years: [2014]
+  input_vars: ["u", "v", "temp", "rh", "psfc"]
+  output_vars: ["pm25", "pm10", "so2", "no2", "co", "o3"]
+  time_history: 3              # Réduit pour test
+  time_future: 6
+  target_resolution: [64, 128] # Résolution réduite
+  normalize: true
+
+model:
+  img_size: [64, 128]
+  patch_size: 4
+  embed_dim: 256               # Réduit pour test
+  depth: 4                     # Réduit pour test
+  num_heads: 4
+  mlp_ratio: 4.0
+
+training:
+  lr: 1e-3
+  max_epochs: 3                # Très court pour test
+  weight_decay: 1e-5
+  clip_grad_norm: 1.0
+
+dataloader:
+  batch_size: 2                # Petit batch pour test
+  num_workers: 2
+
+system:
+  devices: 1                   # Single GPU
+  accelerator: "gpu"
+  strategy: "auto"
+  precision: "16-mixed"
+
+pretrained:
+  use_pretrained: true
+  checkpoint_path: "/scratch/project_462000640/ammar/rossice/checkpoints/climax_1.40625deg.ckpt"
+
+checkpoint:
+  save_dir: "/scratch/project_462000640/ammar/rossice/checkpoints/"
+
+logging:
+  log_dir: "/scratch/project_462000640/ammar/rossice/logs/"
+  log_every_n_steps: 5
