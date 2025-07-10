@@ -26,3 +26,4 @@ Thumbs.db
 
 # Config perso
 *.env
+checkpoints/*.ckpt
