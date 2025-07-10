@@ -1,0 +1,115 @@
+
+-----------------------------------------------------------------------------------------------------------------------------------
+  cairo:
+-----------------------------------------------------------------------------------------------------------------------------------
+    Description:
+      2D graphics library with support for multiple output devices
+
+     Versions:
+        cairo/1.17.4-cpeAMD-22.08
+        cairo/1.17.4-cpeAMD-22.12
+        cairo/1.17.4-cpeAMD-23.09
+        cairo/1.17.4-cpeAMD-23.12
+        cairo/1.17.4-cpeAOCC-22.08
+        cairo/1.17.4-cpeAOCC-22.12
+        cairo/1.17.4-cpeAOCC-23.09
+        cairo/1.17.4-cpeAOCC-23.12
+        cairo/1.17.4-cpeCray-22.08
+        cairo/1.17.4-cpeCray-22.12
+        cairo/1.17.4-cpeCray-23.03
+        cairo/1.17.4-cpeCray-23.09
+        cairo/1.17.4-cpeCray-23.12
+        cairo/1.17.4-cpeGNU-22.08
+        cairo/1.17.4-cpeGNU-22.12
+        cairo/1.17.4-cpeGNU-23.09
+        cairo/1.17.4-cpeGNU-23.12
+        cairo/1.18.0-cpeAMD-24.03
+        cairo/1.18.0-cpeAOCC-24.03
+        cairo/1.18.0-cpeCray-24.03
+        cairo/1.18.0-cpeGNU-24.03
+
+-----------------------------------------------------------------------------------------------------------------------------------
+  For detailed information about a specific "cairo" package (including how to load the modules) use the module's full name.
+  Note that names that have a trailing (E) are extensions provided by other modules.
+  For example:
+
+     $ module spider cairo/1.18.0-cpeGNU-24.03
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------------------
+  cotainr:
+-----------------------------------------------------------------------------------------------------------------------------------
+    Description:
+      cotainr is a tool that helps making Singularity/Apptainer containers.
+
+     Versions:
+        cotainr/2023.01.0-cray-python-3.9.12.1
+        cotainr/2023.01.0
+        cotainr/2023.11.0-cray-python-3.9.13.1
+        cotainr/2023.11.0-20240529-AIcourse-cray-python-3.10.10
+        cotainr/2023.11.0-20240529-AIcourse
+        cotainr/2023.11.0-20240909-cray-python-3.11.7
+        cotainr/2023.11.0-20240909
+
+-----------------------------------------------------------------------------------------------------------------------------------
+  For detailed information about a specific "cotainr" package (including how to load the modules) use the module's full name.
+  Note that names that have a trailing (E) are extensions provided by other modules.
+  For example:
+
+     $ module spider cotainr/2023.11.0-20240909
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------------------
+  lumi-container-wrapper:
+-----------------------------------------------------------------------------------------------------------------------------------
+    Description:
+      Tool for wrapping a software environment in an Apptainer/Singularity containerm, also know as tykky.
+
+     Versions:
+        lumi-container-wrapper/0.2.6-cray-python-default
+        lumi-container-wrapper/0.2.6-cray-python-3.9.12.1
+        lumi-container-wrapper/0.3.1-cray-python-default
+        lumi-container-wrapper/0.3.1-cray-python-3.9.12.1
+        lumi-container-wrapper/0.3.1-cray-python-3.9.13.1
+        lumi-container-wrapper/0.3.1-cray-python-3.10.10
+        lumi-container-wrapper/0.3.3-cray-python-default
+        lumi-container-wrapper/0.3.3-cray-python-3.11.5
+        lumi-container-wrapper/0.3.3-cray-python-3.11.7
+
+-----------------------------------------------------------------------------------------------------------------------------------
+  For detailed information about a specific "lumi-container-wrapper" package (including how to load the modules) use the module's full name.
+  Note that names that have a trailing (E) are extensions provided by other modules.
+  For example:
+
+     $ module spider lumi-container-wrapper/0.3.3-cray-python-3.11.7
+-----------------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------------------
+  partition: partition/container
+-----------------------------------------------------------------------------------------------------------------------------------
+    Description:
+      partition/container enables the LUMI/22.08 software stack for the LUMI-container (EasyBuild installation singularity wrapper
+      modules) partition.
+
+    Properties:
+      Module is Sticky, requires --force to unload or purge
+
+    You will need to load all module(s) on any one of the lines below before the "partition/container" module is available to load.
+
+      LUMI/22.08
+      LUMI/22.12
+      LUMI/23.03
+      LUMI/23.09
+      LUMI/23.12
+      LUMI/24.03
+ 
+    Help:
+      Description
+      ===========
+      Enables installing software via EasyBuild from a LUMI partition that is available outside
+      of the LUMI software stacks. This module is in particular for EasyBuild installation singularity wrapper modules.
+      
+      This partition module is never loaded automatically and also not needed when running
+      the software installed through it.
+      
+
