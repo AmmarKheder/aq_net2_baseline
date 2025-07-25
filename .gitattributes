@@ -1,0 +1,11 @@
+local_packages/nvidia/cudnn/lib/*.so.* filter=lfs diff=lfs merge=lfs -text
+local_packages/nvidia/cufft/lib/*.so.* filter=lfs diff=lfs merge=lfs -text
+local_packages/nvidia/cusolver/lib/*.so.* filter=lfs diff=lfs merge=lfs -text
+local_packages/cusparselt/lib/*.so.* filter=lfs diff=lfs merge=lfs -text
+local_packages/nvidia/cublas/lib/*.so.* filter=lfs diff=lfs merge=lfs -text
+local_packages/nvidia/nccl/lib/*.so.* filter=lfs diff=lfs merge=lfs -text
+local_packages/nvidia/cusparse/lib/*.so.* filter=lfs diff=lfs merge=lfs -text
+local_packages/nvidia/curand/lib/*.so.* filter=lfs diff=lfs merge=lfs -text
+local_packages/nvidia/cuda_nvrtc/lib/*.so.* filter=lfs diff=lfs merge=lfs -text
+local_packages/**/*.so* filter=lfs diff=lfs merge=lfs -text
+*.so filter=lfs diff=lfs merge=lfs -text
