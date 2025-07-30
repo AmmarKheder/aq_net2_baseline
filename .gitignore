@@ -1,29 +1,95 @@
-# Environnements virtuels
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyTorch
+*.pth
+*.pt
+*.ckpt
+
+# Virtual environments
 venv/
 env/
 ENV/
+env.bak/
+venv.bak/
+local_packages/
 
-# Fichiers Python temporaires
-__pycache__/
-*.py[cod]
-*.so
-*.egg
-*.egg-info/
-dist/
-build/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Logs et outputs
-logs/
-outputs/
-*.log
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Config perso
-*.env
-checkpoints/*.ckpt
+# Logs
+*.log
+logs/
+wandb/
+
+# Data
+data/
+datasets/
+*.csv
+*.h5
+*.hdf5
+*.nc
+*.netcdf
+
+# Models and checkpoints
+checkpoints/
+models/
+saved_models/
+*.model
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Git LFS
+git-lfs-*/
+*.tar.gz
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
